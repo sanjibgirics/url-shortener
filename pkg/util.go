@@ -28,3 +28,10 @@ func generateShortCode() string {
 
 	return string(shortCode)
 }
+
+// getDomainFromURL returns domain name from the given url
+func getDomainFromURL(urlString string) string {
+	// Ignoring error check as already checked validity before
+	parsedURL, _ := url.Parse(urlString)
+	return parsedURL.Host
+}

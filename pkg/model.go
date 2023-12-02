@@ -12,3 +12,7 @@ var shortCodeToOriginalURL = make(map[string]string)
 
 // originalURLToShortCode map will contain original url as key and generated short code as value.
 var originalURLToShortCode = make(map[string]string)
+
+// domainsUsageMap map will contain number of times individual domains have used the shortener
+// service
+var domainsUsageMap = make(map[string]int)

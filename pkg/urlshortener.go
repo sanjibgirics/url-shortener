@@ -32,6 +32,9 @@ func processShorteningURL(originalURL string) *ResponseURL {
 		// store the data
 		shortCodeToOriginalURL[shortCode] = originalURL
 		originalURLToShortCode[originalURL] = shortCode
+
+		// Will update domain usage count each time we receive unique original url
+		updateDomainUsage(originalURL)
 	}
 
 	return responseURL

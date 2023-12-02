@@ -13,6 +13,7 @@ func RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/shorturl", shortURLHandler).Methods("POST")
 	r.HandleFunc("/originalurl", originalURLHandler).Methods("POST")
 	r.HandleFunc("/s/{code}", redirectHandler).Methods("GET")
+	r.HandleFunc("/topdomainsmetric", topDomainsMetricHandler).Methods("GET")
 }
 
 // shortURL will return the shortened url version of original url
@@ -106,6 +107,19 @@ func redirectHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Redirecting to the original URL: %s\n", originalURl)
 	// Redirect to the original URL
 	http.Redirect(w, r, shortCodeToOriginalURL[shortCode], http.StatusMovedPermanently)
+}
+
+// topDomainsMetricHandler returns top 3 domain which have used the url shortener
+// service most
+func topDomainsMetricHandler(w http.ResponseWriter, r *http.Request) {
+	// Get top 3 domain which have used the url shortener service most
+	topDomainMetrics := getTopDomainsUsageMetrics()
+
+	// Prepare response
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(topDomainMetrics); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 // Handle homepage
