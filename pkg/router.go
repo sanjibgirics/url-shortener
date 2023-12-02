@@ -3,6 +3,7 @@ package pkg
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 )
 
@@ -11,6 +12,7 @@ func RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/", homePage).Methods("GET")
 	r.HandleFunc("/shorturl", shortURLHandler).Methods("POST")
 	r.HandleFunc("/originalurl", originalURLHandler).Methods("POST")
+	r.HandleFunc("/s/{code}", redirectHandler).Methods("GET")
 }
 
 // shortURL will return the shortened url version of original url
@@ -87,6 +89,23 @@ func originalURLHandler(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewEncoder(w).Encode(responseURL); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+}
+
+// redirectHandler handles redirection of the short url to the original url
+func redirectHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	shortCode := vars["code"]
+
+	// Check if the short code present with us
+	if _, ok := shortCodeToOriginalURL[shortCode]; !ok {
+		http.Error(w, "given short url not found", http.StatusNotFound)
+		return
+	}
+	originalURl := shortCodeToOriginalURL[shortCode]
+
+	log.Printf("Redirecting to the original URL: %s\n", originalURl)
+	// Redirect to the original URL
+	http.Redirect(w, r, shortCodeToOriginalURL[shortCode], http.StatusMovedPermanently)
 }
 
 // Handle homepage

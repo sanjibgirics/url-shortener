@@ -1,10 +1,16 @@
 package pkg
 
 import (
+	"fmt"
 	"strings"
 )
 
-const baseURL = "https://myurl.io/"
+const PortNumber = "8083"
+
+// Using localhost for redirection to work
+const domainName = "localhost"
+
+var shortURLBase = fmt.Sprintf("http://%s:%s/s/", domainName, PortNumber)
 
 // processShorteningURL processes the shortening of the original url
 func processShorteningURL(originalURL string) *ResponseURL {
@@ -15,10 +21,10 @@ func processShorteningURL(originalURL string) *ResponseURL {
 	// If so, return the short url directly respective to that.
 	if _, ok := originalURLToShortCode[originalURL]; ok {
 		responseURL.OriginalURL = originalURL
-		responseURL.ShortURL = baseURL + originalURLToShortCode[originalURL]
+		responseURL.ShortURL = shortURLBase + originalURLToShortCode[originalURL]
 	} else {
 		shortCode := generateShortCode()
-		shortURL := baseURL + shortCode
+		shortURL := shortURLBase + shortCode
 
 		responseURL.OriginalURL = originalURL
 		responseURL.ShortURL = shortURL
@@ -36,11 +42,11 @@ func processGetOriginalURL(shortURL string) *ResponseURL {
 	responseURL := &ResponseURL{}
 
 	shortURLTrimmed := strings.Trim(shortURL, " ")
-	// Check baseURL is present and in proper place
-	if shortURLTrimmed[:len(baseURL)] != baseURL {
+	// Check shortURLBase is present and in proper place
+	if shortURLTrimmed[:len(shortURLBase)] != shortURLBase {
 		return nil
 	}
-	shortCode := shortURL[len(baseURL):]
+	shortCode := shortURL[len(shortURLBase):]
 
 	if _, ok := shortCodeToOriginalURL[shortCode]; ok {
 		responseURL.OriginalURL = shortCodeToOriginalURL[shortCode]

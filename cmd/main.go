@@ -17,5 +17,5 @@ func main() {
 
 	// Start listening and serving
 	log.Println("Listening and serving url shortener endpoints . . .")
-	http.ListenAndServe(":8082", r)
+	http.ListenAndServe(":"+pkg.PortNumber, r)
 }
