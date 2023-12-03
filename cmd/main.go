@@ -16,6 +16,6 @@ func main() {
 	pkg.RegisterRoutes(r)
 
 	// Start listening and serving
-	log.Println("Listening and serving url shortener endpoints . . .")
+	log.Printf("Listening and serving url shortener endpoints on port: %v", pkg.PortNumber)
 	http.ListenAndServe(":"+pkg.PortNumber, r)
 }
