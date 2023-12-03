@@ -24,7 +24,7 @@ func getTopDomainsUsageMetrics() TopDomainMetrics {
 		return domainsUsageMap[domains[i]] > domainsUsageMap[domains[j]]
 	})
 
-	var topDomainMetrics TopDomainMetrics
+	topDomainMetrics := TopDomainMetrics{}
 	// Take top 3 used domains or less than that if total number of domains less then 3
 	for i := 0; i < len(domains) && i < 3; i++ {
 		domainUsage := DomainUsage{
